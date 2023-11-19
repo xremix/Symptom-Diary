@@ -1,3 +1,13 @@
+async function getConfig() {
+  try {
+      const response = await fetch('config.json');
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error('Error fetching data:', error);
+  }
+};
+
 function dStringToDate(d) {
   var year = d.substring(0, 4);
   var month = d.substring(4, 6);
