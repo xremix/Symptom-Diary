@@ -15,6 +15,7 @@ function dStringToDate(d) {
   var hour = d.substring(9, 11);
   var minute = d.substring(11, 13);
   var second = d.substring(13, 15);
+  // Time Zone Fix for Germany :-(
   return new Date(year, month, day, Number(hour) + 1, minute, second);
 }
 
@@ -209,24 +210,26 @@ function countTimestampsInIntervals(groupedData, intervals) {
   return counts;
 }
 
+
 function printDatesToDiv(dates) {
   const div = document.getElementById('dates');
   div.innerHTML = '';
-  // On every new day, print a new headline with h1
-  // Just print the time for every date element
+
   let lastDate = null;
+
   dates.forEach((date) => {
-    const dateString = date.toISOString().split('T')[0];
-    if (lastDate !== dateString) {
-      const h1 = document.createElement('h3');
-      h1.innerText = dateString;
-      div.appendChild(h1);
-      lastDate = dateString;
-    }
-    const p = document.createElement('span');
-    // margin-right: 1rem;
-    p.style.marginRight = '1rem';
-    p.innerText = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    div.appendChild(p);
+      const dateString = date.toLocaleDateString('de-DE');
+
+      if (lastDate !== dateString) {
+          const h3 = document.createElement('h3');
+          h3.innerText = dateString;
+          div.appendChild(h3);
+          lastDate = dateString;
+      }
+
+      const span = document.createElement('span');
+      span.style.marginRight = '15px';
+      span.innerText = date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+      div.appendChild(span);
   });
 }
