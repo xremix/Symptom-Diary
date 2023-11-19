@@ -10,6 +10,8 @@ Add a `config.json` with the following content
 
 ```json
 {
-    "calendarUrl": "myfile.ics"
+    "title": "",
+    "calendarUrl": "",
+    "iframeUrl": "",
 }
 ```
