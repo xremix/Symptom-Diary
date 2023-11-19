@@ -6,7 +6,7 @@ The goal of this code base is to be able to display tracked symptom data of a pe
 
 ## Getting started
 
-Add a `config.json` with the following content
+1. Add a `config.json` with the following content
 
 ```json
 {
@@ -15,3 +15,5 @@ Add a `config.json` with the following content
     "iframeUrl": "",
 }
 ```
+
+2. Start Live Server in VS Code
