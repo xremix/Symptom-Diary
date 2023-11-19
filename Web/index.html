@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- script main js -->
+    <script src="main.js"></script>
+    <style>
+        body {
+            background-color: #f0f0f0;
+        }
+
+        div {
+            margin-right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Balu - Schnupfentagebuch</h1>
+    
+    <div style="display: flex;">
+        <div style="width: 600px; height: 300px;"><canvas id="myChart"></canvas></div>
+        <div style="width: 600px; height: 300px;"><canvas id="myChart2"></canvas></div>
+    </div>
+    <div style="display: flex;">
+        <div style="width: 1200px; height: 450;"><canvas id="myChart3"></canvas></div>
+    </div>
+
+    <div id="dates"></div>
+    <script>
+        // Example usage
+        const calendarUrl = "";
+
+        fetchDatesFromCalendar(calendarUrl)
+            .then((dates) => {
+                const intervalSizeInHours = 24;
+
+                function x(chartId, title, intervalSizeInHours, filteredDates) {
+
+                    const dataSpecs = [{
+                        title: title,
+                        filteredDates: filteredDates
+                    }];
+                    const intervals = generateIntervals(dataSpecs[0].filteredDates, intervalSizeInHours);
+
+                    const convertedDataSpecs = dataSpecs.map((dataSpec) => {
+                        return {
+                            title: dataSpec.title,
+                            counts: countTimestampsInIntervals(groupTimestamps(dataSpec.filteredDates, intervalSizeInHours), intervals)
+                        }
+                    });
+
+                    fillExistingChart(chartId, intervals, convertedDataSpecs);
+                }
+
+
+                function y(chartId,  intervalSizeInHours, dataSpecs) {
+
+                  
+                    const intervals = generateIntervals(dataSpecs[0].filteredDates, intervalSizeInHours);
+
+                    const convertedDataSpecs = dataSpecs.map((dataSpec) => {
+                        return {
+                            title: dataSpec.title,
+                            counts: countTimestampsInIntervals(groupTimestamps(dataSpec.filteredDates, intervalSizeInHours), intervals)
+                        }
+                    });
+
+                    fillExistingChart(chartId, intervals, convertedDataSpecs);
+                }
+
+
+
+                y('myChart', 24, [{
+                    title: 'Schnupfen pro Tag',
+                    filteredDates: dates
+                },{
+                    title: 'Schnupfen Abends',
+                    filteredDates: filterDatesAfter5pm(dates)
+                }]);
+
+                y('myChart2', 24, [{
+                    title: 'Trend - täglich max. 30 Minuten',
+                    filteredDates: filterDatesThatAreCloseTogether(dates, 30)
+                }]);
+                y('myChart3', 1, [{
+                    title: 'Schnupfen pro Stunde',
+                    filteredDates: dates
+                }]);
+
+                printDatesToDiv(dates);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    </script>
+</body>
+
+</html>
