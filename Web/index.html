@@ -47,21 +47,8 @@
             document.querySelector('#updateCalendarLink').href = config.updateCalendarUrl;
             document.querySelector('h1').innerText = config.title;
             const intervalSizeInHours = 24;
-            function y(chartId, intervalSizeInHours, dataSpecs) {
-                const intervals = generateIntervals(dataSpecs[0].filteredDates, intervalSizeInHours);
 
-                const convertedDataSpecs = dataSpecs.map((dataSpec) => {
-                    return {
-                        title: dataSpec.title,
-                        counts: countTimestampsInIntervals(groupTimestamps(dataSpec.filteredDates, intervalSizeInHours), intervals)
-                    }
-                });
-                fillExistingChart(chartId, intervals, convertedDataSpecs);
-            }
-
-
-
-            y('myChart', 24, [{
+            showChartInDiv('myChart', 24, [{
                 title: 'Schnupfen pro Tag',
                 filteredDates: dates
             }, {
@@ -69,17 +56,16 @@
                 filteredDates: filterDatesAfter5pm(dates)
             }]);
 
-            y('myChart2', 24, [{
+            showChartInDiv('myChart2', 24, [{
                 title: 'Trend - täglich max. 30 Minuten',
                 filteredDates: filterDatesThatAreCloseTogether(dates, 30)
             }]);
-            y('myChart3', 1, [{
+            showChartInDiv('myChart3', 1, [{
                 title: 'Schnupfen pro Stunde',
                 filteredDates: dates
             }]);
 
             printDatesToDiv(dates);
-
         }
         main();
 

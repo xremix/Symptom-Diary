@@ -86,23 +86,28 @@ function convertDatesObjectToChartData(datesPerDate) {
 }
 
 function getBorderColor(i) {
-    const colors = ['rgb(75, 192, 192)', 'rgb(75, 192, 112)', 'rgb(75, 192, 142)', 'rgb(75, 192, 92)', 'rgb(75, 192, 22)'];
-    return colors[i];
-    }
-
+  const colors = [
+    'rgb(75, 192, 192)',
+    'rgb(75, 192, 112)',
+    'rgb(75, 192, 142)',
+    'rgb(75, 192, 92)',
+    'rgb(75, 192, 22)',
+  ];
+  return colors[i];
+}
 
 function fillExistingChart(chartId, intervals, dataSetData) {
   // Prepare data for Chart.js
   const chartData = {
     labels: intervals.map((interval) => interval.toLocaleTimeString([], { hour: '2-digit', day: '2-digit' })),
     datasets: dataSetData.map((dataSet, index) => {
-        return {            
-              label: dataSet.title,
-              data: dataSet.counts,
-              fill: true,
-              borderColor: getBorderColor(index),
-              tension: 0.3,
-    }
+      return {
+        label: dataSet.title,
+        data: dataSet.counts,
+        fill: true,
+        borderColor: getBorderColor(index),
+        tension: 0.3,
+      };
     }),
   };
 
@@ -112,6 +117,18 @@ function fillExistingChart(chartId, intervals, dataSetData) {
     type: 'line',
     data: chartData,
   });
+}
+
+function showChartInDiv(chartId, intervalSizeInHours, dataSpecs) {
+  const intervals = generateIntervals(dataSpecs[0].filteredDates, intervalSizeInHours);
+
+  const convertedDataSpecs = dataSpecs.map((dataSpec) => {
+    return {
+      title: dataSpec.title,
+      counts: countTimestampsInIntervals(groupTimestamps(dataSpec.filteredDates, intervalSizeInHours), intervals),
+    };
+  });
+  fillExistingChart(chartId, intervals, convertedDataSpecs);
 }
 
 // Function to group timestamps by 3-hour intervals
@@ -182,25 +199,24 @@ function countTimestampsInIntervals(groupedData, intervals) {
   return counts;
 }
 
-
-function printDatesToDiv(dates){
-    const div = document.getElementById('dates');
-    div.innerHTML = '';
-    // On every new day, print a new headline with h1
-    // Just print the time for every date element
-    let lastDate = null;
-    dates.forEach((date) => {
-      const dateString = date.toISOString().split('T')[0];
-      if (lastDate !== dateString) {
-        const h1 = document.createElement('h3');
-        h1.innerText = dateString;
-        div.appendChild(h1);
-        lastDate = dateString;
-      }
-      const p = document.createElement('span');
-      // margin-right: 1rem;
-        p.style.marginRight = '1rem';
-      p.innerText = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      div.appendChild(p);
-    });
+function printDatesToDiv(dates) {
+  const div = document.getElementById('dates');
+  div.innerHTML = '';
+  // On every new day, print a new headline with h1
+  // Just print the time for every date element
+  let lastDate = null;
+  dates.forEach((date) => {
+    const dateString = date.toISOString().split('T')[0];
+    if (lastDate !== dateString) {
+      const h1 = document.createElement('h3');
+      h1.innerText = dateString;
+      div.appendChild(h1);
+      lastDate = dateString;
+    }
+    const p = document.createElement('span');
+    // margin-right: 1rem;
+    p.style.marginRight = '1rem';
+    p.innerText = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    div.appendChild(p);
+  });
 }
