@@ -12,13 +12,13 @@
 <body>
     <h1></h1>
     <div style="display: flex;">
-        <div style="width: 600px; height: 300px; padding-right: 20px;"><canvas id="myChart"></canvas></div>
-        <div style="width: 600px; height: 300px;"><canvas id="myChart2"></canvas></div>
+        <div style="max-width: 1000px; width:100% "><canvas id="myChart"></canvas></div>
     </div>
     <div style="display: flex;">
-        <div style="width: 1200px; height: 450;"><canvas id="myChart3"></canvas></div>
+        <div style="max-width: 1000px; width:100%"><canvas id="myChart2"></canvas></div>
     </div>
 
+    <iframe src="" width="1200" height="700" frameborder="0"></iframe>
     <iframe src="" width="1200" height="700" frameborder="0"></iframe>
     <div id="dates"></div>
     <script>
@@ -37,20 +37,22 @@
             }, {
                 title: 'Schnupfen Abends',
                 filteredDates: filterDatesAfter5pm(dates)
-            }]);
-
-            showChartInDiv('myChart2', 24, [{
-                title: 'Trend - abends max. 30 Minuten',
+            },{
+                title: 'Trend - abends max. pro 30 Min',
                 filteredDates: filterDatesAfter5pm(filterDatesThatAreCloseTogether(dates, 30))
             }]);
-            showChartInDiv('myChart3', 1, [{
+
+            showChartInDiv('myChart2', 1, [{
                 title: 'Schnupfen pro Stunde',
                 filteredDates: dates
             }]);
 
             
             if (config.iframeUrl) {
-                document.querySelector('iframe').src = config.iframeUrl;
+                var iframes = document.querySelectorAll('iframe');
+                iframes.forEach(iframe => {
+                    iframe.src = config.iframeUrl;
+                });
             }
             // printDatesToDiv(dates);
         })();
